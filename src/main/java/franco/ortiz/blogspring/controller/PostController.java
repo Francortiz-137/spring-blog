@@ -1,9 +1,10 @@
 package franco.ortiz.blogspring.controller;
 
 
-import franco.ortiz.blogspring.DTO.PostDTOInput;
+import franco.ortiz.blogspring.dto.impl.output.PostDTOOutput;
 import franco.ortiz.blogspring.entity.PostEntity;
 import franco.ortiz.blogspring.service.IPostService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostEntity> listAll(){
-        return postService.findAll();
+    public ResponseEntity<List<PostDTOOutput>> listAll(){
+        return ResponseEntity.ok(postService.findAll());
     }
 }

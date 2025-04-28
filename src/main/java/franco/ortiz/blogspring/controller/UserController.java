@@ -1,11 +1,14 @@
 package franco.ortiz.blogspring.controller;
 
-import franco.ortiz.blogspring.DTO.UserDTOInput;
+import franco.ortiz.blogspring.dto.impl.input.UserDTOInput;
+import franco.ortiz.blogspring.dto.impl.output.UserDTOOutput;
 import franco.ortiz.blogspring.entity.UserEntity;
 import franco.ortiz.blogspring.service.IUserService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -18,19 +21,13 @@ public class UserController {
     }
 
     @GetMapping("")
-    public List<UserEntity> findAll(){
-        return userService.findAll();
+    public ResponseEntity<List<UserDTOOutput>> findAll(){
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @PostMapping("")
-    public UserEntity save(@Valid @RequestBody UserDTOInput userDTO) {
-        UserEntity user = UserEntity.builder()
-                .username(userDTO.getUsername())
-                .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
-                .phoneNumber(userDTO.getPhoneNumber())
-                .createdAt(java.time.LocalDateTime.now())
-                .build();
-        return userService.save(user);
+    public ResponseEntity<UserDTOOutput> save(@Valid @RequestBody UserDTOInput userDTO) {
+
+        return ResponseEntity.ok(userService.save(userDTO));
     }
 }

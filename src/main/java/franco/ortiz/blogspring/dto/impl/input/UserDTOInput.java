@@ -1,5 +1,6 @@
-package franco.ortiz.blogspring.DTO;
+package franco.ortiz.blogspring.dto.impl.input;
 
+import franco.ortiz.blogspring.dto.IDTOEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDTOInput {
+public class UserDTOInput implements IDTOEntity {
 
     @NotBlank(message = "El nombre de usuario es obligatorio.")
     private String username;

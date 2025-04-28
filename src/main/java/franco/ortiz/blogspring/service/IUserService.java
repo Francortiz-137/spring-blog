@@ -1,10 +1,11 @@
 package franco.ortiz.blogspring.service;
 
-import franco.ortiz.blogspring.entity.UserEntity;
+import franco.ortiz.blogspring.dto.impl.input.UserDTOInput;
+import franco.ortiz.blogspring.dto.impl.output.UserDTOOutput;
 
 import java.util.List;
 
 public interface IUserService {
-    List<UserEntity> findAll();
-    UserEntity save(UserEntity user);
+    List<UserDTOOutput> findAll();
+    UserDTOOutput save(UserDTOInput user);
 }
