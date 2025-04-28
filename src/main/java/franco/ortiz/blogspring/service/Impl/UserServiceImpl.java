@@ -4,8 +4,10 @@ import franco.ortiz.blogspring.dto.common.MappingDTO;
 import franco.ortiz.blogspring.dto.impl.input.UserDTOInput;
 import franco.ortiz.blogspring.dto.impl.output.UserDTOOutput;
 import franco.ortiz.blogspring.entity.UserEntity;
+import franco.ortiz.blogspring.exception.BadRequestException;
 import franco.ortiz.blogspring.respository.IUserRepo;
 import franco.ortiz.blogspring.service.IUserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,24 +18,30 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements IUserService {
 
     private final IUserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(IUserRepo userRepo) {
+    public UserServiceImpl(IUserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public List<UserDTOOutput> findAll() {
         return userRepo.findAll().stream()
-                .map(user -> {
-                    return (UserDTOOutput) MappingDTO.convertToDto(user, new UserDTOOutput());
-                })
+                .map(user -> (UserDTOOutput) MappingDTO.convertToDto(user, new UserDTOOutput()))
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public UserDTOOutput save(UserDTOInput userDTOInput) {
-        UserEntity user = (UserEntity) MappingDTO.convertToEntity(userDTOInput, UserEntity.class);
-        UserDTOOutput userDTOOutput = (UserDTOOutput) MappingDTO.convertToDto(userRepo.save(user), new UserDTOOutput());
-        return userDTOOutput;
+    public void registerUser(UserDTOInput userDTO) {
+        if (userRepo.existsByEmail(userDTO.getEmail())) {
+            throw new BadRequestException("Email ya registrado");
+        }
+
+        UserEntity user = (UserEntity) MappingDTO.convertToEntity(userDTO, UserEntity.class);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        userRepo.save(user);
     }
 }

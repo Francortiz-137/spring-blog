@@ -24,10 +24,4 @@ public class UserController {
     public ResponseEntity<List<UserDTOOutput>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
-
-    @PostMapping("")
-    public ResponseEntity<UserDTOOutput> save(@Valid @RequestBody UserDTOInput userDTO) {
-
-        return ResponseEntity.ok(userService.save(userDTO));
-    }
 }

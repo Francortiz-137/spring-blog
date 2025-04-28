@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface IUserService {
     List<UserDTOOutput> findAll();
-    UserDTOOutput save(UserDTOInput user);
+    void registerUser(UserDTOInput userDTOInput);
 }
