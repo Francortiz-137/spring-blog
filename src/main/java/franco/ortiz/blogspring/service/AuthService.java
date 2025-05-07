@@ -6,10 +6,13 @@ import franco.ortiz.blogspring.dto.impl.UserLoginDTO;
 import franco.ortiz.blogspring.dto.impl.UserRegisterDTO;
 import franco.ortiz.blogspring.entity.Role;
 import franco.ortiz.blogspring.entity.UserEntity;
+import franco.ortiz.blogspring.exception.ResourceAlreadyExistsException;
 import franco.ortiz.blogspring.respository.IUserRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AuthService {
 
@@ -25,9 +28,11 @@ public class AuthService {
 
     public void register(UserRegisterDTO request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Usuario ya existe");
+            log.error("Usuario ya existe");
+            throw new ResourceAlreadyExistsException("Usuario ya existe");
         }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            log.error("Email ya existe");
             throw new RuntimeException("Email ya existe");
         }
 
