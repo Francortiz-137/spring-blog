@@ -1,23 +1,11 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
 server:
   port: 9000
   servlet:
     context-path: /api
-
-
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-  application:
-    name: app-blog
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
 
 jwt:
   secret: ${JWT_SECRET}
