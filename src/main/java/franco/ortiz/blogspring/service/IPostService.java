@@ -2,7 +2,6 @@ package franco.ortiz.blogspring.service;
 
 import franco.ortiz.blogspring.dto.impl.input.PostDTOInput;
 import franco.ortiz.blogspring.dto.impl.output.PostDTOOutput;
-import franco.ortiz.blogspring.entity.PostEntity;
 
 import java.util.List;
 
@@ -15,5 +14,5 @@ public interface IPostService {
 
     PostDTOOutput update(Long postId, PostDTOInput input);
 
-    void deleteById(long l);
+    void deleteById(Long id);
 }

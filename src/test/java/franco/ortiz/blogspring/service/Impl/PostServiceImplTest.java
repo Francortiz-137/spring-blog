@@ -45,6 +45,7 @@ class PostServiceImplTest {
         );
     }
 
+    @DisplayName("Debería retornar todos los posts")
     @Test
     void getAllPostsShouldReturnAllPosts() {
 
@@ -157,10 +158,14 @@ class PostServiceImplTest {
     }
 
 
-
+    @DisplayName("Debería eliminar un post existente correctamente dado un id")
     @Test
     void deletePostShouldDeletePost() {
-        postService.deleteById(1L);
-        verify(postRepo).deleteById(1L);
+        Long postId = 1L;
+        PostEntity post = posts.getFirst();
+        when(postRepo.findById(postId)).thenReturn(Optional.of(posts.getFirst()));
+
+        postService.deleteById(postId);
+        verify(postRepo).delete(post);
     }
 }
