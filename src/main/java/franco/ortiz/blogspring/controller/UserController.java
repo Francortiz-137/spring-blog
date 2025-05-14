@@ -24,4 +24,20 @@ public class UserController {
     public ResponseEntity<List<UserDTOOutput>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTOOutput> findById(@PathVariable Long id){
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDTOOutput> update(@PathVariable Long id, @RequestBody @Valid UserDTOInput input){
+        return ResponseEntity.ok(userService.update(id,input));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        userService.deleteById(id);
+        return ResponseEntity.ok("Usuario eliminado correctamente");
+    }
 }

@@ -44,4 +44,19 @@ public class UserServiceImpl implements IUserService {
 
         userRepo.save(user);
     }
+
+    @Override
+    public UserDTOOutput findById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
+    public UserDTOOutput update(Long id, UserDTOInput input) {
+        return null;
+    }
 }
