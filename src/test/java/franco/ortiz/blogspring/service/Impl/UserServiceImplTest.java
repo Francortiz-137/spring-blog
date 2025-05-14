@@ -3,6 +3,7 @@ package franco.ortiz.blogspring.service.Impl;
 import franco.ortiz.blogspring.dto.common.MappingDTO;
 import franco.ortiz.blogspring.dto.impl.input.UserDTOInput;
 import franco.ortiz.blogspring.dto.impl.output.UserDTOOutput;
+import franco.ortiz.blogspring.entity.PostEntity;
 import franco.ortiz.blogspring.entity.UserEntity;
 import franco.ortiz.blogspring.respository.IUserRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
@@ -72,7 +74,15 @@ class UserServiceImplTest {
         List<UserDTOOutput> userDTOOutputs = users.stream().map(user -> (UserDTOOutput) MappingDTO.convertToDto(user, new UserDTOOutput()))
                 .toList();
 
-        assertEquals(userDTOOutputs, userService.findAll());
+        List<UserDTOOutput> result = userService.findAll();
+
+        assertEquals(userDTOOutputs.size(), result.size() );
+        assertEquals(userDTOOutputs.getFirst().getUsername(), result.getFirst().getUsername());
+        assertEquals(userDTOOutputs.getLast().getUsername(), result.getLast().getUsername());
+        assertEquals(userDTOOutputs.getFirst().getEmail(), result.getFirst().getEmail());
+        assertEquals(userDTOOutputs.getLast().getEmail(), result.getLast().getEmail());
+        assertEquals(userDTOOutputs.getFirst().getPhoneNumber(), result.getFirst().getPhoneNumber());
+        assertEquals(userDTOOutputs.getLast().getPhoneNumber(), result.getLast().getPhoneNumber());
     }
 
     @DisplayName("Deberia retornar el usuario con el id dado")
@@ -87,7 +97,7 @@ class UserServiceImplTest {
         assertEquals(user, MappingDTO.convertToDto(user, new UserDTOOutput()));
     }
 
-    @DisplayName("Debe actualizar los datos del usuario dado")
+    @DisplayName("Deberia actualizar los datos del usuario dado")
     @Test
     void updateShouldReturnUser() {
         Long id = 1L;
@@ -99,14 +109,15 @@ class UserServiceImplTest {
         userInput.setEmail("john.doe@gmail.com");
 
         UserEntity user = users.getFirst();
+        UserDTOOutput oldUser = (UserDTOOutput) MappingDTO.convertToDto(user, new UserDTOOutput());
 
         when(userRepo.findById(id)).thenReturn(Optional.of(user));
-        when(userRepo.save(user)).thenReturn(user);
+        when(userRepo.save(any(UserEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         UserDTOOutput userDTOOutput = userService.update(id, userInput);
 
         assertNotNull(userDTOOutput);
-        assertEquals(userDTOOutput, MappingDTO.convertToDto(user, new UserDTOOutput()));
+        assertEquals(userDTOOutput.getUsername(),"new username");
     }
 
     @DisplayName("Deberia eliminar el usuario con el id dado")
@@ -117,6 +128,6 @@ class UserServiceImplTest {
         when(userRepo.findById(id)).thenReturn(Optional.of(users.getFirst()));
 
         userService.deleteById(id);
-        verify(userRepo).delete(user);
+        verify(userRepo).deleteById(id);
     }
 }

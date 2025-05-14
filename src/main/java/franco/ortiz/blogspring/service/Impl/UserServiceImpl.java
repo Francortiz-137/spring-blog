@@ -5,12 +5,12 @@ import franco.ortiz.blogspring.dto.impl.input.UserDTOInput;
 import franco.ortiz.blogspring.dto.impl.output.UserDTOOutput;
 import franco.ortiz.blogspring.entity.UserEntity;
 import franco.ortiz.blogspring.exception.BadRequestException;
+import franco.ortiz.blogspring.exception.ResourceNotFoundException;
 import franco.ortiz.blogspring.respository.IUserRepo;
 import franco.ortiz.blogspring.service.IUserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,16 +47,21 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDTOOutput findById(Long id) {
-        return null;
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return (UserDTOOutput) MappingDTO.convertToDto(user, new UserDTOOutput());
     }
 
     @Override
     public void deleteById(Long id) {
-
+        userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userRepo.deleteById(id);
     }
 
     @Override
     public UserDTOOutput update(Long id, UserDTOInput input) {
-        return null;
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        UserEntity newUser = (UserEntity) MappingDTO.convertToEntity(input, UserEntity.class);
+        newUser.setId(id);
+        return (UserDTOOutput) MappingDTO.convertToDto(userRepo.save(newUser), new UserDTOOutput());
     }
 }
